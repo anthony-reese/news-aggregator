@@ -92,3 +92,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 >>>>>>> 3656b19 (Initial commit from Create Next App)
+
+.vercel

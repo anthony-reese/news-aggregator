@@ -14,17 +14,38 @@ const Home = () => {
 
   const categories = ['General', 'Technology', 'Sports', 'Business', 'Health'];
 
+  // Fetch news by category
   const handleCategoryChange = async (category: string) => {
-    const fetchedNews = await getNews(category.toLowerCase());
-    setNews(fetchedNews);
-    setFilteredNews(fetchedNews);
+    try {
+      setLoading(true);
+      const fetchedNews = await getNews(category.toLowerCase());
+  
+      if (!fetchedNews || fetchedNews.length === 0) {
+        console.error('No news data received');
+        setError('No data received from API');
+        return;
+      }
+  
+      setNews(fetchedNews);
+      setFilteredNews(fetchedNews);
+    } catch (err) {
+      console.error('Error fetching news:', err);
+      setError('Failed to load news.');
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Initial fetch on mount
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const fetchedNews = await getNews();
-        console.log(fetchedNews);
+        if (!fetchedNews || !Array.isArray(fetchedNews)) {
+          console.error('Invalid data fetched:', fetchedNews);
+          setError('No valid news data received');
+          return;
+        }
         setNews(fetchedNews);
         setFilteredNews(fetchedNews);
       } catch (err) {
@@ -36,11 +57,13 @@ const Home = () => {
     };
     fetchNews();
   }, []);
+  
 
+  // Filter news based on search query
   useEffect(() => {
     setFilteredNews(
       news.filter(article =>
-        article.title.toLowerCase().includes(searchQuery.toLowerCase())
+        article.title?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
   }, [searchQuery, news]);
@@ -51,34 +74,36 @@ const Home = () => {
 
       {/* Search Bar */}
       <input
-        type='text'
-        placeholder='Search news...'
-        className='border p-2 w-full mb-4 rounded-md'
+        type="text"
+        placeholder="Search news..."
+        className="border p-2 w-full mb-4 rounded-md"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
       {/* Category Buttons */}
-      <div className='flex gap-2 mb-4'>
+      <div className="flex gap-2 mb-4">
         {categories.map((category) => (
           <button
             key={category}
             onClick={() => handleCategoryChange(category)}
-            className='px-4 py-2 border rounded-md hover:bg-gray-200'
+            className="px-4 py-2 border rounded-md hover:bg-gray-200 transition"
           >
             {category}
           </button>
         ))}
       </div>
 
+      {/* Loading & Error Handling */}
       {loading && <p>Loading news...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
       {/* News Cards */}
       <div>
         {!loading && !error && filteredNews.length > 0 ? (
-          filteredNews.map((article, index) => 
-            <NewsCard key={index} article={article} />)
+          filteredNews.map((article) =>
+            article.title ? <NewsCard key={article.title} article={article} /> : null
+          )
         ) : (
           !loading && !error && <p>No articles found.</p>
         )}

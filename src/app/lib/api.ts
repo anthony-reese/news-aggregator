@@ -7,7 +7,7 @@ export interface Article {
   urlToImage?: string;
 }
 
-export const getNews = async (category = ''): Promise<Article[]> => {
+export const getNews = async (category: string = ''): Promise<Article[]> => {
   try {
     const res = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${category}`, {
       method: 'GET',
@@ -21,9 +21,9 @@ export const getNews = async (category = ''): Promise<Article[]> => {
     }
 
     const data = await res.json();
-    return Array.isArray(data.articles) ? data.articles : [];
-  } catch (error) {
-    console.error('Failed to fetch news:', error);
+    return data.articles || [];
+  } catch (err) {
+    console.error('Failed to fetch news:', err);
     return []; // Return an empty array on failure to prevent crashing the app
   }
 };
