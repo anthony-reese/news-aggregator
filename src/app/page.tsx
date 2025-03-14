@@ -1,27 +1,26 @@
-// app/page.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getNews, Article } from '@/app/lib/api';
-import NewsCard from '@/app/components/NewsCard';
+import { getNews } from '@/app/lib/api';  // Assuming you have this helper function
+import NewsCard from '@/app/components/NewsCard';  // Assuming this is your card component
 
 const Home = () => {
-  const [news, setNews] = useState<Article[]>([]);
-  const [filteredNews, setFilteredNews] = useState<Article[]>([]);
+  const [news, setNews] = useState<any[]>([]);  // Define the type of the news items properly
+  const [filteredNews, setFilteredNews] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const categories = ['General', 'Technology', 'Sports', 'Business', 'Health'];
-
+  
   // Fetch news by category
   const handleCategoryChange = async (category: string) => {
     try {
       setLoading(true);
       const fetchedNews = await getNews(category.toLowerCase());
+      console.log("Fetched news by category:", fetchedNews);
   
       if (!fetchedNews || fetchedNews.length === 0) {
-        console.error('No news data received');
         setError('No data received from API');
         return;
       }
@@ -29,8 +28,8 @@ const Home = () => {
       setNews(fetchedNews);
       setFilteredNews(fetchedNews);
     } catch (err) {
-      console.error('Error fetching news:', err);
       setError('Failed to load news.');
+      console.error('Error fetching news:', err);
     } finally {
       setLoading(false);
     }
@@ -41,28 +40,27 @@ const Home = () => {
     const fetchNews = async () => {
       try {
         const fetchedNews = await getNews();
-        if (!fetchedNews || !Array.isArray(fetchedNews)) {
-          console.error('Invalid data fetched:', fetchedNews);
-          setError('No valid news data received');
+        console.log("Fetched initial news:", fetchedNews);
+        if (!fetchedNews) {
+          setError('No data received from API');
           return;
         }
         setNews(fetchedNews);
         setFilteredNews(fetchedNews);
       } catch (err) {
-        console.error('Error fetching news:', err);
         setError('Failed to load news.');
+        console.error('Error fetching news:', err);
       } finally {
         setLoading(false);
       }
     };
     fetchNews();
-  }, []);
-  
+  }, []);  // This will run once when the component mounts
 
   // Filter news based on search query
   useEffect(() => {
     setFilteredNews(
-      news.filter(article =>
+      news.filter((article) =>
         article.title?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );

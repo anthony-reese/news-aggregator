@@ -7,23 +7,25 @@ export interface Article {
   urlToImage?: string;
 }
 
-export const getNews = async (category: string = ''): Promise<Article[]> => {
+export const getNews = async (category = 'general') => {
+  const apiKey = '33d0333d7a3a4108a122c4a23287928a'; // Replace with your actual API key
+  const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${apiKey}`;
+  console.log('Fetching news from:', apiUrl);
+
   try {
-    const res = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${category}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_NEWS_API_KEY}`,
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error(`Error fetching news: ${res.status} ${res.statusText}`);
+    const response = await fetch(apiUrl);
+    console.log('API response status:', response.status);
+    if (!response.ok) {
+      throw new Error(`API responded with status: ${response.status}`);
     }
-
-    const data = await res.json();
-    return data.articles || [];
-  } catch (err) {
-    console.error('Failed to fetch news:', err);
-    return []; // Return an empty array on failure to prevent crashing the app
+    const data = await response.json();
+    console.log('API response data:', data);
+    if (!data || !data.articles) {
+      throw new Error('Invalid data received from API');
+    }
+    return data.articles;
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    return null;
   }
 };
