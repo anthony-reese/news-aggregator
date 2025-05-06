@@ -24,3 +24,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.button-hover {
+  background-color: transparent; /* Default background */
+  color: var(--foreground); /* Default text color */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.button-hover:hover {
+  background-color: var(--foreground); /* Background color on hover */
+  color: var(--background); /* Text color on hover */
+}
+
+.button-highlighted {
+  background-color: var(--foreground); /* Use the foreground color for the background */
+  color: var(--background); /* Use the background color for the text */
+  font-weight: bold;
+}

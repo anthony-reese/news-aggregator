@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getNews } from '@/app/lib/api';  // Assuming you have this helper function
 import NewsCard from '@/app/components/NewsCard';  // Assuming this is your card component
+import { debounce } from 'lodash';
 
 const Home = () => {
   const [news, setNews] = useState<any[]>([]);  // Define the type of the news items properly
@@ -10,6 +11,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('General');
 
   const categories = ['General', 'Technology', 'Sports', 'Business', 'Health'];
   
@@ -34,6 +36,15 @@ const Home = () => {
       setLoading(false);
     }
   };
+
+  const debouncedSearch = debounce((query: string, news: any[], setFilteredNews: Function) => {
+    setFilteredNews(
+      news.filter((article) =>
+        article.title?.toLowerCase().includes(query.toLowerCase()) ||
+        article.description?.toLowerCase().includes(query.toLowerCase())
+      )
+    );
+  }, 300); // 300ms delay
 
   // Initial fetch on mount
   useEffect(() => {
@@ -61,9 +72,11 @@ const Home = () => {
   useEffect(() => {
     setFilteredNews(
       news.filter((article) =>
-        article.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        article.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.description?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
+    debouncedSearch(searchQuery, news, setFilteredNews);
   }, [searchQuery, news]);
 
   return (
@@ -83,11 +96,18 @@ const Home = () => {
       <div className="flex gap-2 mb-4">
         {categories.map((category) => (
           <button
-            key={category}
-            onClick={() => handleCategoryChange(category)}
-            className="px-4 py-2 border rounded-md hover:bg-gray-200 transition"
-          >
-            {category}
+          key={category}
+          onClick={() => {
+            setSelectedCategory(category);
+            handleCategoryChange(category);
+          }}
+          className={`px-4 py-2 border rounded-md transition ${
+            selectedCategory === category 
+              ? 'button-highlighted' 
+              : 'button-hover'
+          }`}
+        >
+          {category}
           </button>
         ))}
       </div>
@@ -98,13 +118,15 @@ const Home = () => {
 
       {/* News Cards */}
       <div>
-        {!loading && !error && filteredNews.length > 0 ? (
-          filteredNews.map((article) =>
-            article.title ? <NewsCard key={article.title} article={article} /> : null
-          )
-        ) : (
-          !loading && !error && <p>No articles found.</p>
-        )}
+      {!loading && !error && filteredNews.length > 0 ? (
+        filteredNews.map((article) =>
+          article.title ? (
+            <NewsCard key={article.title} article={article} searchQuery={searchQuery} />
+          ) : null
+        )
+      ) : (
+        !loading && !error && <p>No articles found.</p>
+      )}
       </div>
     </div>
   );

@@ -7,9 +7,9 @@ export interface Article {
   urlToImage?: string;
 }
 
-export const getNews = async (category = 'general') => {
+export const getNews = async (category = 'general', country = 'us') => {
   const apiKey = '33d0333d7a3a4108a122c4a23287928a'; // Replace with your actual API key
-  const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${apiKey}`;
+  const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}`;
   console.log('Fetching news from:', apiUrl);
 
   try {
