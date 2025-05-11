@@ -13,15 +13,24 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": "./src",
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+      "@/generated/prisma": ["generated/prisma"],
+      "@/lib/prisma": ["lib/prisma"],
+      "@/app/lib/api": ["app/lib/api"],
+      "@/app/components/NewsCard": ["app/components/NewsCard"],
+      "@/app/components/SaveButton": ["app/components/SaveButton"],
+      "@/components/ThemeProvider": ["src/components/ThemeProvider"],
+      "@/lib/auth": ["src/lib/auth"]
+    },
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "postcss.config.js"],
   "exclude": ["node_modules"]
 }

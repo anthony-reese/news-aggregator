@@ -1,17 +1,30 @@
+// filepath: d:\news-aggregator\src\app\page.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { getNews } from '@/app/lib/api';  // Assuming you have this helper function
 import NewsCard from '@/app/components/NewsCard';  // Assuming this is your card component
+import SaveButton from '@/app/components/SaveButton';
 import { debounce } from 'lodash';
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
+
+type Article = {
+  title: string;
+  description: string;
+  url: string;
+  // add any other expected fields
+};
 
 const Home = () => {
+  const { data: session } = useSession();
   const [news, setNews] = useState<any[]>([]);  // Define the type of the news items properly
   const [filteredNews, setFilteredNews] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('General');
+  const router = useRouter();
 
   const categories = ['General', 'Technology', 'Sports', 'Business', 'Health'];
   
@@ -70,18 +83,35 @@ const Home = () => {
 
   // Filter news based on search query
   useEffect(() => {
-    setFilteredNews(
-      news.filter((article) =>
-        article.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-    debouncedSearch(searchQuery, news, setFilteredNews);
-  }, [searchQuery, news]);
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Top News</h1>
+
+      {/* Sign Up and Log In Buttons */}
+      <div className="mb-4 flex gap-4">
+        {session ? (
+          <div>
+            <p>Welcome, {session.user?.name}!</p>
+            <button onClick={() => signOut()} className="button button-red">
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-4">
+            <button onClick={() => signIn("email", { email: "user@example.com" })} className="button button-blue">
+              Login
+            </button>
+            <button onClick={() => router.push('/signup')} className="button button-green">
+              Sign Up
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Search Bar */}
       <input
@@ -119,14 +149,17 @@ const Home = () => {
       {/* News Cards */}
       <div>
       {!loading && !error && filteredNews.length > 0 ? (
-        filteredNews.map((article) =>
-          article.title ? (
-            <NewsCard key={article.title} article={article} searchQuery={searchQuery} />
-          ) : null
-        )
-      ) : (
-        !loading && !error && <p>No articles found.</p>
-      )}
+          filteredNews.map((article) =>
+            article.title ? (
+              <div key={article.title}>
+                <NewsCard article={article} searchQuery={searchQuery} />
+                <SaveButton article={article} />
+              </div>
+            ) : null
+          )
+        ) : (
+          !loading && !error && <p>No articles found.</p>
+        )}
       </div>
     </div>
   );

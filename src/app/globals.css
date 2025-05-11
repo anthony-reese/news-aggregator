@@ -1,8 +1,11 @@
 @import "tailwindcss";
+@import "tailwindcss/utilities";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @theme inline {
@@ -12,11 +15,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme='dark'] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {
@@ -41,3 +42,53 @@ body {
   color: var(--background); /* Use the background color for the text */
   font-weight: bold;
 }
+
+.button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: bold;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.button-blue {
+  background-color: #3b82f6; /* Tailwind's blue-500 */
+}
+
+.button-blue:hover {
+  background-color: #2563eb; /* Tailwind's blue-600 */
+}
+
+.button-green {
+  background-color: #10b981; /* Tailwind's green-500 */
+}
+
+.button-green:hover {
+  background-color: #059669; /* Tailwind's green-600 */
+}
+
+.button-red {
+  background-color: #ef4444; /* Tailwind's red-500 */
+}
+
+.button-red:hover {
+  background-color: #dc2626; /* Tailwind's red-600 */
+}
+
+nav ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #0070f3;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
