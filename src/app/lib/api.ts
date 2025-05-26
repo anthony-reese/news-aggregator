@@ -8,17 +8,18 @@ export interface Article {
 }
 
 export const getNews = async (category = 'general', country = 'us') => {
-  const apiKey = process.env.NEWS_API_KEY;
+  const apiKey = process.env.NEWS_API_KEY!;
     if (!apiKey) {
       console.error("❌ Missing NEWS_API_KEY in environment variables");
       return null;
     }
-  const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}`;
+  const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}`;
   console.log('Fetching news from:', apiUrl);
 
   try {
     const response = await fetch(apiUrl, {
       headers: {
+        'X-Api-Key': apiKey!,
         "Content-Type": "application/json",
       },
     });
