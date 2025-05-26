@@ -1,3 +1,5 @@
+// /src/app/api/news/route.ts
+
 import { NextResponse } from "next/server";
 import { getNews } from "../../lib/api";
 
