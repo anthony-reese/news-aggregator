@@ -1,12 +1,12 @@
-// filepath: d:\news-aggregator\src\lib\[...nextauth].ts
+// filepath: \news-aggregator\src\pages\api\[...nextauth].ts
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import EmailProvider from "next-auth/providers/email";
 import { AuthOptions } from "next-auth";
 import NextAuth from "next-auth";
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import nodemailer from 'nodemailer';
-import { magicLinkTemplate } from '../../../lib/emailTemplates/magicLinkEmail';
+import { magicLinkTemplate } from '../../lib/emailTemplates/magicLinkEmail';
 
 // Example custom email sender function
 export async function sendCustomEmail({ email, link }: { email: string; link: string }) {

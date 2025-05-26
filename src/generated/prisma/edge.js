@@ -192,7 +192,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\news-aggregator\\src\\generated\\prisma",
+      "value": "C:\\projects\\news-aggregator\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -208,7 +208,7 @@ const config = {
     "previewFeatures": [
       "clientExtensions"
     ],
-    "sourceFilePath": "D:\\news-aggregator\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\projects\\news-aggregator\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

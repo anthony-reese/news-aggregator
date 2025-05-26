@@ -8,14 +8,24 @@ export interface Article {
 }
 
 export const getNews = async (category = 'general', country = 'us') => {
-  const apiKey = '33d0333d7a3a4108a122c4a23287928a'; // Replace with your actual API key
+  const apiKey = process.env.NEWS_API_KEY;
+    if (!apiKey) {
+      console.error("❌ Missing NEWS_API_KEY in environment variables");
+      return null;
+    }
   const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}`;
   console.log('Fetching news from:', apiUrl);
 
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     console.log('API response status:', response.status);
     if (!response.ok) {
+      const errorText = await response.text(); // log raw response for debugging
+      console.error("Raw error body:", errorText);
       throw new Error(`API responded with status: ${response.status}`);
     }
     const data = await response.json();
