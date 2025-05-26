@@ -1,16 +1,14 @@
-import type { NextConfig } from "next";
+// next.config.ts
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   experimental: {
-    serverActions: {}, // Instead of `serverActions: true`
+    serverActions: {}, // this is okay
   },
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
   images: {
-    domains: [
-      'example.com', 
-      'cdn.newsapi.org'
-    ], // add valid sources
+    domains: ['example.com', 'cdn.newsapi.org'],
   },
 };
 

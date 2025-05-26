@@ -62,13 +62,17 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*",
+    "types/**/*",
     ".next/types/**/*.ts",
     "postcss.config.js",
-    "src", "prisma"
+    "prisma"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules", 
+    ".next", 
+    "dist", 
+    "build", 
+    "out"
   ]
 }

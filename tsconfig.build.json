@@ -1,0 +1,6 @@
+// tsconfig.build.json
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*", "types/**/*", "next-env.d.ts"],
+  "exclude": ["node_modules", ".next", "dist", "build", "out"]
+}

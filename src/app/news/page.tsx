@@ -1,4 +1,4 @@
-// /src/app/components/NewsList.tsx
+// /src/app/news/page.tsx
 
 'use client';
 import { useState } from 'react';
