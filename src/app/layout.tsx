@@ -1,4 +1,4 @@
-// filepath: d:\news-aggregator\src\app\layout.tsx
+// filepath: \src\app\layout.tsx
 
 'use client';
 
@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <SessionProvider >
           <ThemeProvider>
-            <header className="p-4">
+            <header className="p-4 w-full flex justify-end">
               <ThemeToggle />
             </header>
             {children} {/* Ensure children are rendered */}

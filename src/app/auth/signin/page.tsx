@@ -2,16 +2,18 @@
 
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -42,19 +44,15 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-md mx-auto rounded-lg p-6 shadow-md border border-gray-200 dark:border-neutral-700">
       <h1 className="text-2xl font-semibold mb-4">Sign in with Email</h1>
-
-      {submitted ? (
-        <p className="text-green-600">Check your email for a login link.</p>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit}>
           <input
             type="email"
+            placeholder="Enter your email"
             value={email}
-            placeholder="you@example.com"
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded"
+            className="w-full border border-gray-300 p-2 rounded mb-3"
             required
           />
 
@@ -62,12 +60,27 @@ export default function SignInPage() {
 
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
             disabled={loading}
+            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 w-full"
           >
-            {loading ? 'Sending...' : 'Sign In'}
+            {loading ? "Sending..." : "Send Magic Link"}
+          </button>
+
+          {/* Go Back button */}
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full"
+            onClick={() => router.push('/')}
+            type="button"
+          >
+            Go Back
           </button>
         </form>
+        {submitted && (
+        <p className="text-green-600 bg-green-100 p-3 rounded-md shadow-sm border border-green-300 mt-4">
+          ✅ Check your email for a login link.</p>
+      )}
+      {error && (
+        <p className="text-red-500 text-sm mt-2">❌ {error}</p>
       )}
     </div>
   );

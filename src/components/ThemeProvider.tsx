@@ -2,9 +2,13 @@
 
 import { createContext, useEffect, useState, useContext } from 'react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { ReactNode } from 'react'
 
-const ThemeContext = createContext({
+type ThemeContextType = {
+  theme: string;
+  toggleTheme: () => void;
+};
+
+const ThemeContext = createContext<ThemeContextType>({
   theme: 'light',
   toggleTheme: () => {},
 });
@@ -31,9 +35,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-      {children}
-    </NextThemesProvider>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
+        {children}
+      </NextThemesProvider>
+    </ThemeContext.Provider>
   );
 };
 

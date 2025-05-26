@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.7.0
- * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+ * Prisma Client JS version: 6.8.2
+ * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
  */
 Prisma.prismaVersion = {
-  client: "6.7.0",
-  engine: "3cff47a7f5d65c3ea74883f1d736e41d68ce91ed"
+  client: "6.8.2",
+  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -169,13 +169,13 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.VerificationtokenScalarFieldEnum = {
+exports.Prisma.VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
   expires: 'expires'
 };
 
-exports.Prisma.SavedarticleScalarFieldEnum = {
+exports.Prisma.SavedArticleScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   articleUrl: 'articleUrl',
@@ -189,71 +189,25 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
 
-exports.Prisma.accountOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  type: 'type',
-  provider: 'provider',
-  providerAccountId: 'providerAccountId',
-  refresh_token: 'refresh_token',
-  access_token: 'access_token',
-  token_type: 'token_type',
-  scope: 'scope',
-  id_token: 'id_token',
-  session_state: 'session_state'
-};
-
-exports.Prisma.authorOrderByRelevanceFieldEnum = {
-  name: 'name',
-  email: 'email'
-};
-
-exports.Prisma.postOrderByRelevanceFieldEnum = {
-  title: 'title',
-  content: 'content'
-};
-
-exports.Prisma.sessionOrderByRelevanceFieldEnum = {
-  id: 'id',
-  sessionToken: 'sessionToken',
-  userId: 'userId'
-};
-
-exports.Prisma.userOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  image: 'image',
-  password: 'password'
-};
-
-exports.Prisma.verificationtokenOrderByRelevanceFieldEnum = {
-  identifier: 'identifier',
-  token: 'token'
-};
-
-exports.Prisma.savedarticleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  articleUrl: 'articleUrl',
-  title: 'title',
-  imageUrl: 'imageUrl'
-};
-
 
 exports.Prisma.ModelName = {
-  account: 'account',
-  author: 'author',
-  post: 'post',
-  session: 'session',
-  user: 'user',
-  verificationtoken: 'verificationtoken',
-  savedarticle: 'savedarticle'
+  Account: 'Account',
+  Author: 'Author',
+  Post: 'Post',
+  Session: 'Session',
+  User: 'User',
+  VerificationToken: 'VerificationToken',
+  SavedArticle: 'SavedArticle'
 };
 
 /**

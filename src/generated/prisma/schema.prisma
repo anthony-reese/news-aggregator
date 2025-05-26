@@ -1,15 +1,18 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["clientExtensions"]
+  engineType      = "binary"
+  binaryTargets   = ["native"]
 }
 
 datasource db {
-  provider          = "mysql"
+  provider          = "postgresql"
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model account {
+model Account {
   id                String  @id
   userId            String
   type              String
@@ -22,57 +25,57 @@ model account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Account_userId_fkey")
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Account_userId_fkey_rel")
 
   @@unique([provider, providerAccountId], map: "Account_provider_providerAccountId_key")
-  @@index([userId], map: "Account_userId_fkey")
+  @@index([userId], map: "Account_userId_fkey_pg")
 }
 
-model author {
+model Author {
   id    Int    @id @default(autoincrement())
   name  String
   email String @unique(map: "Author_email_key")
-  post  post[]
+  post  Post[]
 }
 
-model post {
+model Post {
   id        Int      @id @default(autoincrement())
   title     String
   content   String?
   published Boolean  @default(false)
   authorId  Int
-  author    author   @relation(fields: [authorId], references: [id], onDelete: Cascade, map: "Post_authorId_fkey")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade, map: "Post_authorId_fkey_rel")
 
   @@index([authorId], map: "Post_authorId_fkey")
 }
 
-model session {
-  id           String   @id
+model Session {
+  id           String   @id @default(cuid()) @map("id")
   sessionToken String   @unique(map: "Session_sessionToken_key")
   userId       String
   expires      DateTime
-  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Session_userId_fkey")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Session_userId_fkey_rel")
 
   @@index([userId], map: "Session_userId_fkey")
 }
 
-model user {
-  id            String         @id
+model User {
+  id            String         @id @default(uuid())
   name          String?
   email         String?        @unique(map: "User_email_key")
   emailVerified DateTime?
-  savedArticles savedarticle[]
   image         String?
   password      String?
-  account       account[]
-  session       session[]
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  account       Account[]
+  savedArticles SavedArticle[]
+  session       Session[]
 }
 
-model verificationtoken {
+model VerificationToken {
   identifier String
   token      String   @unique(map: "VerificationToken_token_key")
   expires    DateTime
@@ -80,16 +83,15 @@ model verificationtoken {
   @@unique([identifier, token], map: "VerificationToken_identifier_token_key")
 }
 
-model savedarticle {
+model SavedArticle {
   id         String   @id @default(cuid())
   userId     String
   articleUrl String
   title      String
   imageUrl   String?
   savedAt    DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, articleUrl]) // prevents duplicates
+  @@unique([userId, articleUrl])
   @@index([userId])
 }

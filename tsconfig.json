@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -13,24 +17,58 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/generated/prisma": ["generated/prisma"],
-      "@/lib/prisma": ["lib/prisma"],
-      "@/app/lib/api": ["app/lib/api"],
-      "@/app/components/NewsCard": ["app/components/NewsCard"],
-      "@/app/components/SaveButton": ["app/components/SaveButton"],
-      "@/components/ThemeProvider": ["src/components/ThemeProvider"],
-      "@/lib/auth": ["src/lib/auth"]
+      "@/*": [
+        "/src/*"
+      ],
+      "@/generated/prisma": [
+        "generated/prisma"
+      ],
+      "@/lib/prisma": [
+        "lib/prisma"
+      ],
+      "@/app/lib/api": [
+        "app/lib/api"
+      ],
+      "@/api/auth/[...nextauth]": [
+        "api/auth/[...nextauth]"
+      ],
+      "@/app/components/ArticleCard": [
+        "app/components/ArticleCard"
+      ],
+      "@/app/components/SaveButton": [
+        "app/components/SaveButton"
+      ],
+      "@/components/ThemeProvider": [
+        "src/components/ThemeProvider"
+      ],
+      "@/lib/auth": [
+        "src/lib/auth"
+      ],
+      "@/types/Article": [
+        "src/types/Article"
+      ]
     },
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "postcss.config.js"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "postcss.config.js",
+    "src", "prisma"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

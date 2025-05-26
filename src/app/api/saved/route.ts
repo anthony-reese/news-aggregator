@@ -1,13 +1,15 @@
+// \src\app\api\saved\route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from 'd:/news-aggregator/src/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { authOptions } from '../../../pages/api/auth/[...nextauth]';
+import { prisma } from '../../../lib/prisma';
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const saved = await prisma.savedarticle.findMany({
+  const saved = await prisma.savedArticle.findMany({
     where: { user: { email: session.user.email } },
     orderBy: { savedAt: 'desc' },
   });
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
 
   if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-  const saved = await prisma.savedarticle.create({
+  const saved = await prisma.savedArticle.create({
     data: {
       userId: user.id,
       articleUrl,
@@ -55,7 +57,7 @@ export async function DELETE(req: NextRequest) {
 
   if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-  await prisma.savedarticle.deleteMany({
+  await prisma.savedArticle.deleteMany({
     where: {
       userId: user.id,
       articleUrl: url,
