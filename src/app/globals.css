@@ -27,19 +27,19 @@ body {
 }
 
 .button-hover {
-  background-color: transparent; /* Default background */
-  color: var(--foreground); /* Default text color */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+  background-color: transparent;
+  color: var(--foreground);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .button-hover:hover {
-  background-color: var(--foreground); /* Background color on hover */
-  color: var(--background); /* Text color on hover */
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 .button-highlighted {
-  background-color: var(--foreground); /* Use the foreground color for the background */
-  color: var(--background); /* Use the background color for the text */
+  background-color: var(--foreground);
+  color: var(--background);
   font-weight: bold;
 }
 
@@ -52,27 +52,27 @@ body {
 }
 
 .button-blue {
-  background-color: #3b82f6; /* Tailwind's blue-500 */
+  background-color: #3b82f6;
 }
 
 .button-blue:hover {
-  background-color: #2563eb; /* Tailwind's blue-600 */
+  background-color: #2563eb;
 }
 
 .button-green {
-  background-color: #10b981; /* Tailwind's green-500 */
+  background-color: #10b981;
 }
 
 .button-green:hover {
-  background-color: #059669; /* Tailwind's green-600 */
+  background-color: #059669;
 }
 
 .button-red {
-  background-color: #ef4444; /* Tailwind's red-500 */
+  background-color: #ef4444;
 }
 
 .button-red:hover {
-  background-color: #dc2626; /* Tailwind's red-600 */
+  background-color: #dc2626;
 }
 
 nav ul {

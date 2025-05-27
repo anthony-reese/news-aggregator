@@ -1,10 +1,8 @@
-// filepath: d:\news-aggregator\src\app\page.tsx
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getNews } from '../app/lib/api'; // Assuming you have this helper function
-import ArticleCard from '../app/components/ArticleCard'; // Assuming this is your card component
+import { getNews } from '../app/lib/api';
+import ArticleCard from '../app/components/ArticleCard';
 import SaveButton from '../app/components/SaveButton';
 import { debounce } from 'lodash';
 import { signOut, useSession } from "next-auth/react";
@@ -14,15 +12,16 @@ type Article = {
   title: string;
   description: string;
   url: string;
-  urlToImage?: string; // Optional field for the article image
+  urlToImage?: string;
 };
 
 const Home = () => {
   const { data: session } = useSession();
-  const [news, setNews] = useState<Article[]>([]); // Use the Article type
-  const [filteredNews, setFilteredNews] = useState<Article[]>([]); // Use the Article type
+  const [news, setNews] = useState<Article[]>([]); 
+  const [filteredNews, setFilteredNews] = useState<Article[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('General');
   const [view, setView] = useState<'grid' | 'list'>('list');
@@ -30,7 +29,6 @@ const Home = () => {
 
   const categories = ['General', 'Technology', 'Sports', 'Business', 'Health', 'Entertainment', 'Science'];
 
-  // Fetch news by category
   const handleCategoryChange = async (category: string) => {
     try {
       setLoading(true);
@@ -42,8 +40,8 @@ const Home = () => {
         return;
       }
 
-      setNews(fetchedNews); // Keep the full list of news
-      setFilteredNews(fetchedNews); // Update the filtered list
+      setNews(fetchedNews);
+      setFilteredNews(fetchedNews);
     } catch (err) {
       setError('Failed to load news.');
       console.error('Error fetching news:', err);
@@ -59,37 +57,42 @@ const Home = () => {
         article.description?.toLowerCase().includes(query.toLowerCase())
       )
     );
-  }, 300); // 300ms delay
+  }, 300);
 
-  // Initial fetch on mount
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const fetchedNews = await getNews();
-        console.log("Fetched initial news:", fetchedNews);
-        if (!fetchedNews) {
-          setError('No data received from API');
-          return;
-        }
-        setNews(fetchedNews); // Keep the full list of news
-        setFilteredNews(fetchedNews); // Update the filtered list
-      } catch (err) {
-        setError('Failed to load news.');
-        console.error('Error fetching news:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchNews();
-  }, []); // This will run once when the component mounts
+  const fetchNews = async () => {
+    try {
+      const res = await fetch('/api/news');
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const data = await res.json();
 
-  // Filter news based on search query
+      if (!data || data.length === 0) {
+        setError('No data received from API');
+        return;
+      }
+
+      setArticles(data);
+      setNews(data);
+      setFilteredNews(data);
+      console.log("Fetched initial news:", data);
+    } catch (err) {
+      setError('Failed to load news.');
+      console.error('Error fetching news:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchNews();
+}, []);
+
+
   useEffect(() => {
     debouncedSearch(searchQuery, news, setFilteredNews);
     return () => {
       debouncedSearch.cancel();
     };
-  }, [searchQuery, news]); // Re-run when searchQuery or news changes
+  }, [searchQuery, news]); 
 
   return (
     <div className="container mx-auto p-4">
@@ -176,6 +179,15 @@ const Home = () => {
       {/* Loading & Error Handling */}
       {loading && <p>Loading news...</p>}
       {error && <p className="text-red-500">{error}</p>}
+      <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Latest News</h1>
+      {articles.map((article, index) => (
+        <div key={index} className="mb-4 border-b pb-2">
+          <h2 className="font-semibold">{article.title}</h2>
+          <p>{article.description || 'No description available.'}</p>
+        </div>
+      ))}
+    </div>
 
       {/* View Toggle */}
       <div className={

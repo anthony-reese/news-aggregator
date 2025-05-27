@@ -1,5 +1,3 @@
-// filepath: d:\news-aggregator\src\lib\emailTemplates\magicLinkEmail.ts
-
 export function magicLinkTemplate(link: string) {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 2rem; background-color: #f9f9f9; border-radius: 8px;">

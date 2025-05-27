@@ -1,5 +1,3 @@
-// lib/api.ts
-
 export interface Article {
   title: string;
   description: string;
@@ -25,7 +23,7 @@ export const getNews = async (category = 'general', country = 'us') => {
     });
     console.log('API response status:', response.status);
     if (!response.ok) {
-      const errorText = await response.text(); // log raw response for debugging
+      const errorText = await response.text();
       console.error("Raw error body:", errorText);
       throw new Error(`API responded with status: ${response.status}`);
     }

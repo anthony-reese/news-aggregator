@@ -1,5 +1,3 @@
-// File: /pages/auth/error.tsx
-
 'use client';
 
 import { useSearchParams } from 'next/navigation';

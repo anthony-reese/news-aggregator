@@ -1,5 +1,3 @@
-// filepath: \src\app\layout.tsx
-
 'use client';
 
 import { Geist, Geist_Mono } from "next/font/google";
@@ -29,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <header className="p-4 w-full flex justify-end">
               <ThemeToggle />
             </header>
-            {children} {/* Ensure children are rendered */}
+            {children}
           </ThemeProvider>
         </SessionProvider>
       </body>

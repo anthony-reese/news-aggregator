@@ -1,4 +1,3 @@
-// tsconfig.build.json
 {
   "extends": "./tsconfig.json",
   "include": ["src/**/*", "types/**/*", "next-env.d.ts"],

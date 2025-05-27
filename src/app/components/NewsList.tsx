@@ -1,11 +1,9 @@
-// src/app/components/NewsList.tsx
-
 import ArticleCard from './ArticleCard';
-import { Article } from '@/types/Article'; // used for typing each article
+import { Article } from '@/types/Article';
 
 type NewsListProps = {
   articles: Article[];
-  searchQuery: string; // ✅ Add this
+  searchQuery: string;
 };
 
 export default function NewsList({ articles, searchQuery }: NewsListProps) {
@@ -15,7 +13,7 @@ export default function NewsList({ articles, searchQuery }: NewsListProps) {
         <ArticleCard
           key={index}
           article={{ ...article, url: article.url || '' }}
-          searchQuery={searchQuery} // ✅ Pass it down
+          searchQuery={searchQuery}
         />
       ))}
     </div>

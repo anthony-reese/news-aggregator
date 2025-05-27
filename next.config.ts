@@ -1,10 +1,8 @@
-// next.config.ts
-
 const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   experimental: {
-    serverActions: {}, // this is okay
+    serverActions: {},
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
   images: {

@@ -1,5 +1,3 @@
-// components/ArticleCard.tsx
-
 import React from 'react';
 
 type ArticleCardProps = {

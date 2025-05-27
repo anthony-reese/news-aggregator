@@ -1,6 +1,5 @@
-// /src/app/news/page.tsx
-
 'use client';
+
 import { useState } from 'react';
 import NewsList from '../components/NewsList';
 
@@ -11,7 +10,6 @@ const articles = [
     urlToImage: 'https://example.com/image.jpg',
     url: 'https://example.com/article',
   },
-  // Add more articles here
 ];
 
 export default function NewsPage() {

@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
-  // Load the theme from localStorage or use the system preference
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
     if (savedTheme) {
@@ -19,7 +18,6 @@ export default function ThemeToggle() {
     }
   }, []);
 
-  // Toggle the theme and save it to localStorage
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
