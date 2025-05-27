@@ -12,8 +12,6 @@ export const getNews = async (category = 'general', country = 'us') => {
       return null;
     }
   const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}`;
-  console.log('Fetching news from:', apiUrl);
-  console.log("✅ API key:", process.env.NEWS_API_KEY);
 
   try {
     const response = await fetch(apiUrl, {

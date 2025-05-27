@@ -62,7 +62,7 @@ const Home = () => {
   useEffect(() => {
   const fetchNews = async () => {
     try {
-      const res = await fetch('/api/news');
+      const res = await fetch("/api/news?category=general");
       if (!res.ok) throw new Error(`Status ${res.status}`);
       const data = await res.json();
 

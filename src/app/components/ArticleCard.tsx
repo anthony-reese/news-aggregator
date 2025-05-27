@@ -47,6 +47,7 @@ export default function ArticleCard({ article, searchQuery }: ArticleCardProps) 
           src={urlToImage}
           alt={title}
           className="w-32 h-20 object-cover rounded flex-shrink-0"
+          loading="lazy"
         />
       ) : (
         <img
