@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getNews } from "../../lib/api";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const category = req.nextUrl.searchParams.get("category") || "general";
+
   try {
-    const news = await getNews();
+    const news = await getNews(category);
 
     if (!news || !Array.isArray(news)) {
       return NextResponse.json({ error: "No news data received" }, { status: 500 });

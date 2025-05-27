@@ -32,23 +32,18 @@ const Home = () => {
   const handleCategoryChange = async (category: string) => {
     try {
       setLoading(true);
-      const fetchedNews = await getNews(category.toLowerCase());
-      console.log("Fetched news by category:", fetchedNews);
-
-      if (!fetchedNews || fetchedNews.length === 0) {
-        setError('No data received from API');
-        return;
-      }
-
-      setNews(fetchedNews);
-      setFilteredNews(fetchedNews);
+      const res = await fetch(`/api/news?category=${category.toLowerCase()}`);
+      if (!res.ok) throw new Error(`❌ Failed to fetch: ${res.status}`);
+      const data = await res.json();
+      setArticles(data);
     } catch (err) {
-      setError('Failed to load news.');
-      console.error('Error fetching news:', err);
+      console.error("❌ Error loading news by category:", err);
+      setError("No data received from API");
     } finally {
       setLoading(false);
     }
   };
+
 
   const debouncedSearch = debounce((query: string, news: Article[], setFilteredNews: Function) => {
     setFilteredNews(
@@ -96,7 +91,7 @@ const Home = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-2">Top News</h1>
+      <h1 className="text-3xl font-bold mb-2">{selectedCategory} News</h1>
 
         <div className="mb-4 flex items-center justify-between">
         {/* View Toggle Buttons (left) */}
@@ -179,15 +174,6 @@ const Home = () => {
       {/* Loading & Error Handling */}
       {loading && <p>Loading news...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Latest News</h1>
-      {articles.map((article, index) => (
-        <div key={index} className="mb-4 border-b pb-2">
-          <h2 className="font-semibold">{article.title}</h2>
-          <p>{article.description || 'No description available.'}</p>
-        </div>
-      ))}
-    </div>
 
       {/* View Toggle */}
       <div className={
