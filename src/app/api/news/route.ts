@@ -1,17 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getNews } from "../../lib/api";
 
-export async function GET(req: Request) {
-    console.log("Request received:", req);
-
+export async function GET(req: NextRequest) {
     try {
-        const news = await getNews();
-        console.log("Fetched news:", news);
+        // Optional: support category via query string, e.g. /api/news?category=technology
+        const { searchParams } = new URL(req.url);
+        const category = searchParams.get("category") || undefined;
 
+        const news = await getNews(category);
         if (!news) {
-            throw new Error("No news data received");
+            return NextResponse.json({ error: "No news data received" }, { status: 500 });
         }
-
         return NextResponse.json(news);
     } catch (error) {
         console.error("Error fetching news:", error);

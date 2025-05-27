@@ -6,7 +6,7 @@ export interface Article {
 }
 
 export const getNews = async (category = 'general', country = 'us') => {
-  const apiKey = process.env.NEWS_API_KEY!;
+  const apiKey = process.env.NEWS_API_KEY;
     if (!apiKey) {
       console.error("❌ Missing NEWS_API_KEY in environment variables");
       return null;
