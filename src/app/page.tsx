@@ -16,7 +16,7 @@ type Article = {
 
 const Home = () => {
   const { data: session } = useSession();
-  const [news, setNews] = useState<Article[]>([]); 
+  const [news] = useState<Article[]>([]); 
   const [filteredNews, setFilteredNews] = useState<Article[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -25,13 +25,15 @@ const Home = () => {
   const [category, setCategory] = useState('General');
   const [view, setView] = useState<'grid' | 'list'>('list');
   const router = useRouter();
+  const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1) + ' News';
+
 
   const categories = ['General', 'Technology', 'Sports', 'Business', 'Health', 'Entertainment', 'Science'];
 
   const handleCategoryChange = async (category: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/news?category=${category.toUpperCase()}`);
+      const res = await fetch(`/api/news?category=${category.toLowerCase()}`);
       if (!res.ok) throw new Error(`❌ Failed to fetch: ${res.status}`);
       const data = await res.json();
       setArticles(data);
@@ -87,7 +89,7 @@ const Home = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-2">{category} News</h1>
+      <h1 className="text-3xl font-bold mb-2">{categoryLabel}</h1>
 
         <div className="mb-4 flex items-center justify-between">
         {/* View Toggle Buttons (left) */}
@@ -188,14 +190,6 @@ const Home = () => {
           !loading && !error && <p>No articles found.</p>
         )}
       </div>
-
-      {/* Articles */}
-      {articles.map((article, i) => (
-        <div key={i} className="mb-4 border-b pb-2">
-          <h2 className="font-semibold">{article.title}</h2>
-          <p>{article.description || 'No description.'}</p>
-        </div>
-      ))}
     </div>
   );
 };
