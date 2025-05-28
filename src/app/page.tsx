@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getNews } from '../app/lib/api';
 import ArticleCard from '../app/components/ArticleCard';
 import SaveButton from '../app/components/SaveButton';
 import { debounce } from 'lodash';
@@ -22,12 +21,12 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('General');
+  const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState('general');
   const [view, setView] = useState<'grid' | 'list'>('list');
   const router = useRouter();
 
-  const categories = ['General', 'Technology', 'Sports', 'Business', 'Health', 'Entertainment', 'Science'];
+  const categories = ['general', 'technology', 'sports', 'business', 'health', 'entertainment', 'science'];
 
   const handleCategoryChange = async (category: string) => {
     try {
@@ -56,10 +55,16 @@ const Home = () => {
 
   useEffect(() => {
   const fetchNews = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const res = await fetch("/api/news?category=general");
+      const res = await fetch(`/api/news?category=${category}`);
       if (!res.ok) throw new Error(`Status ${res.status}`);
       const data = await res.json();
+
+      if (!data || !Array.isArray(data)) {
+          throw new Error('No valid news received.');
+        }
 
       if (!data || data.length === 0) {
         setError('No data received from API');
@@ -71,15 +76,14 @@ const Home = () => {
       setFilteredNews(data);
       console.log("Fetched initial news:", data);
     } catch (err) {
+      console.error(err);
       setError('Failed to load news.');
-      console.error('Error fetching news:', err);
     } finally {
       setLoading(false);
     }
   };
-
   fetchNews();
-}, []);
+}, [category]);
 
 
   useEffect(() => {
@@ -91,7 +95,7 @@ const Home = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-2">{selectedCategory} News</h1>
+      <h1 className="text-3xl font-bold mb-2">{category} News</h1>
 
         <div className="mb-4 flex items-center justify-between">
         {/* View Toggle Buttons (left) */}
@@ -153,20 +157,20 @@ const Home = () => {
 
       {/* Category Buttons */}
       <div className="flex gap-2 mb-4">
-        {categories.map((category) => (
+        {categories.map((cat) => (
           <button
-            key={category}
+            key={cat}
             onClick={() => {
-              setSelectedCategory(category);
-              handleCategoryChange(category);
+              setCategory(cat);
+              handleCategoryChange(cat);
             }}
             className={`px-4 py-2 border rounded-md transition ${
-              selectedCategory === category 
+              category === cat 
                 ? 'button-highlighted' 
                 : 'button-hover'
             }`}
           >
-            {category}
+            {cat.charAt(0).toUpperCase() + cat.slice(1)}
           </button>
         ))}
       </div>
@@ -192,6 +196,14 @@ const Home = () => {
           !loading && !error && <p>No articles found.</p>
         )}
       </div>
+
+      {/* Articles */}
+      {articles.map((article, i) => (
+        <div key={i} className="mb-4 border-b pb-2">
+          <h2 className="font-semibold">{article.title}</h2>
+          <p>{article.description || 'No description.'}</p>
+        </div>
+      ))}
     </div>
   );
 };

@@ -8,6 +8,14 @@ const nextConfig = {
   images: {
     domains: ['example.com', 'cdn.newsapi.org'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/auth/:path*',
+        destination: '/api/[...nextauth]/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
