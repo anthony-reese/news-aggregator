@@ -22,7 +22,7 @@ const Home = () => {
   const [error, setError] = useState<string | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState('general');
+  const [category, setCategory] = useState('General');
   const [view, setView] = useState<'grid' | 'list'>('list');
   const router = useRouter();
 
@@ -31,7 +31,7 @@ const Home = () => {
   const handleCategoryChange = async (category: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/news?category=${category.toLowerCase()}`);
+      const res = await fetch(`/api/news?category=${category.toUpperCase()}`);
       if (!res.ok) throw new Error(`❌ Failed to fetch: ${res.status}`);
       const data = await res.json();
       setArticles(data);
