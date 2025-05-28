@@ -26,7 +26,7 @@ const Home = () => {
   const [view, setView] = useState<'grid' | 'list'>('list');
   const router = useRouter();
 
-  const categories = ['general', 'technology', 'sports', 'business', 'health', 'entertainment', 'science'];
+  const categories = ['General', 'Technology', 'Sports', 'Business', 'Health', 'Entertainment', 'Science'];
 
   const handleCategoryChange = async (category: string) => {
     try {
@@ -66,15 +66,7 @@ const Home = () => {
           throw new Error('No valid news received.');
         }
 
-      if (!data || data.length === 0) {
-        setError('No data received from API');
-        return;
-      }
-
       setArticles(data);
-      setNews(data);
-      setFilteredNews(data);
-      console.log("Fetched initial news:", data);
     } catch (err) {
       console.error(err);
       setError('Failed to load news.');
@@ -156,7 +148,7 @@ const Home = () => {
       />
 
       {/* Category Buttons */}
-      <div className="flex gap-2 mb-4">
+      <div className="mb-6 flex flex-wrap gap-4">
         {categories.map((cat) => (
           <button
             key={cat}
