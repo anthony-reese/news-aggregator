@@ -6,6 +6,8 @@ import SaveButton from '../app/components/SaveButton';
 import { debounce } from 'lodash';
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
+import { LayoutGrid, List, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 type Article = {
   title: string;
@@ -16,109 +18,83 @@ type Article = {
 
 const Home = () => {
   const { data: session } = useSession();
-  const [news] = useState<Article[]>([]); 
+  const [articles, setArticles] = useState<Article[]>([]);
   const [filteredNews, setFilteredNews] = useState<Article[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState('General');
+  const [category, setCategory] = useState('general');
   const [view, setView] = useState<'grid' | 'list'>('list');
   const router = useRouter();
-  const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1) + ' News';
-
+  const { theme, setTheme } = useTheme();
 
   const categories = ['General', 'Technology', 'Sports', 'Business', 'Health', 'Entertainment', 'Science'];
+  const categoryLabel = `${category.charAt(0).toUpperCase()}${category.slice(1)} News`;
 
-  const handleCategoryChange = async (category: string) => {
-    try {
-      setLoading(true);
-      const res = await fetch(`/api/news?category=${category.toLowerCase()}`);
-      if (!res.ok) throw new Error(`❌ Failed to fetch: ${res.status}`);
-      const data = await res.json();
-      setArticles(data);
-    } catch (err) {
-      console.error("❌ Error loading news by category:", err);
-      setError("No data received from API");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  const debouncedSearch = debounce((query: string, news: Article[], setFilteredNews: Function) => {
-    setFilteredNews(
-      news.filter((article) =>
-        article.title?.toLowerCase().includes(query.toLowerCase()) ||
-        article.description?.toLowerCase().includes(query.toLowerCase())
-      )
+  const debouncedSearch = debounce((query: string, news: Article[]) => {
+    const filtered = news.filter((article) =>
+      article.title?.toLowerCase().includes(query.toLowerCase()) ||
+      article.description?.toLowerCase().includes(query.toLowerCase())
     );
+    setFilteredNews(filtered);
   }, 300);
 
   useEffect(() => {
-  const fetchNews = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch(`/api/news?category=${category}`);
-      if (!res.ok) throw new Error(`Status ${res.status}`);
-      const data = await res.json();
-
-      if (!data || !Array.isArray(data)) {
-          throw new Error('No valid news received.');
-        }
-
-      setArticles(data);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load news.');
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchNews();
-}, [category]);
-
+    const fetchNews = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const res = await fetch(`/api/news?category=${category}`);
+        const data = await res.json();
+        if (!res.ok || !Array.isArray(data)) throw new Error('Invalid API response');
+        setArticles(data);
+        setFilteredNews(data);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load news.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNews();
+  }, [category]);
 
   useEffect(() => {
-    debouncedSearch(searchQuery, news, setFilteredNews);
+    debouncedSearch(searchQuery, articles);
     return () => {
       debouncedSearch.cancel();
     };
-  }, [searchQuery, news]); 
+  }, [searchQuery, articles]);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-2">{categoryLabel}</h1>
 
-        <div className="mb-4 flex items-center justify-between">
-        {/* View Toggle Buttons (left) */}
-        <div className="flex gap-4">
+      <div className="mb-4 flex items-center justify-between">
+        
+        {/* View and Theme Toggle Buttons */}
+        <div className="flex gap-2 items-center">
+          {/* View Toggle */}
           <button
             onClick={() => setView('list')}
-            className={`px-4 py-2 rounded transition ${
-              view === 'list'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-gray-200'
-            }`}
-            style={{ minWidth: 110 }}
+            title="List View"
+            aria-label="List View"
+            className={`p-2 rounded ${view === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-gray-200'}`}
           >
-            List View
+            <List />
           </button>
+
           <button
             onClick={() => setView('grid')}
-            className={`px-4 py-2 rounded transition ${
-              view === 'grid'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-gray-200'
-            }`}
-            style={{ minWidth: 110 }}
+            title="Grid View"
+            aria-label="Grid View"
+            className={`p-2 rounded ${view === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-gray-200'}`}
           >
-            Grid View
+            <LayoutGrid />
           </button>
         </div>
 
-        {/* Sign Up and Log In Buttons (right) */}
+        {/* Auth Buttons */}
         <div className="flex gap-4">
           {session?.user?.name ? (
             <div>
@@ -140,7 +116,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
+      {/* Search */}
       <input
         type="text"
         placeholder="Search news..."
@@ -149,38 +125,33 @@ const Home = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
-      {/* Category Buttons */}
+      {/* Categories */}
       <div className="mb-6 flex flex-wrap gap-4">
         {categories.map((cat) => (
           <button
             key={cat}
-            onClick={() => {
-              setCategory(cat);
-              handleCategoryChange(cat);
-            }}
+            onClick={() => setCategory(cat.toLowerCase())}
             className={`px-4 py-2 border rounded-md transition ${
-              category === cat 
-                ? 'button-highlighted' 
-                : 'button-hover'
+              category === cat.toLowerCase() ? 'button-highlighted' : 'button-hover'
             }`}
           >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            {cat}
           </button>
         ))}
       </div>
 
-      {/* Loading & Error Handling */}
+      {/* Error and Loading */}
       {loading && <p>Loading news...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* View Toggle */}
+      {/* Articles */}
       <div className={
         view === 'grid'
           ? 'grid grid-cols-1 sm:grid-cols-2 gap-4'
           : 'flex flex-col gap-4'
       }>
         {!loading && !error && filteredNews.length > 0 ? (
-          filteredNews.map((article: Article) => (
+          filteredNews.map((article) => (
             <div key={article.title}>
               <ArticleCard article={article} searchQuery={searchQuery} />
               <SaveButton article={article} />
