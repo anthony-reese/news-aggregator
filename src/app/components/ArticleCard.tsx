@@ -10,9 +10,9 @@ type ArticleCardProps = {
   searchQuery: string;
 };
 
-const highlightText = (text: string, query: string): React.ReactNode[] => {
+const highlightText = (text: string | undefined | null, query: string): React.ReactNode[] => {
+  if (!text) return [];
   if (!query) return [text];
-
   const parts = text.split(new RegExp(`(${query})`, 'gi'));
   return parts.map((part, i) =>
     part.toLowerCase() === query.toLowerCase() ? (
