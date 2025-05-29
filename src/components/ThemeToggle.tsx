@@ -29,7 +29,7 @@ export default function ThemeToggle() {
     <div className="flex justify-end pr-4">
       <button
         onClick={toggleTheme}
-        className="text-3xl mr-26"
+        className="mt-6 text-3xl mr-22"
       >
         {theme === 'light' ? '🌙 ' : '☀️ '}
       </button>
