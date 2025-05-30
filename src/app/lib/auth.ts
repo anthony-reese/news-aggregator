@@ -1,33 +1,9 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import EmailProvider from "next-auth/providers/email";
+import { prisma } from "../../lib/prisma"; // adjust path if needed
 import { AuthOptions } from "next-auth";
-import NextAuth from "next-auth";
-import { prisma } from "../../lib/prisma";
-import nodemailer from 'nodemailer';
-import { magicLinkTemplate } from '../../lib/emailTemplates/magicLinkEmail';
-
-
-export async function sendCustomEmail({ email, link }: { email: string; link: string }) {
-  const { html, subject } = magicLinkTemplate(link);
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_SERVER_HOST,
-    port: Number(process.env.EMAIL_SERVER_PORT),
-    auth: {
-      user: process.env.EMAIL_SERVER_USER,
-      pass: process.env.EMAIL_SERVER_PASSWORD,
-    },
-  });
-
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to: email,
-    subject,
-    html,
-  });
-  
-  console.log(`📧 Sending magic login link to ${email}`);
-  console.log(`🔗 Magic link: ${link}`);
-}
+import nodemailer from "nodemailer";
+import { magicLinkTemplate } from "../../lib/emailTemplates/magicLinkEmail"; // adjust path
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -43,43 +19,30 @@ export const authOptions: AuthOptions = {
       },
       from: process.env.EMAIL_FROM!,
       async sendVerificationRequest({ identifier, url }) {
-        
-        console.log("🚀 Sending magic link to", identifier);
-        await sendCustomEmail({ email: identifier, link: url });
-        console.log(`📧 Triggering magic link email for: ${identifier}`);
+        const { html, subject } = magicLinkTemplate(url);
+        const transporter = nodemailer.createTransport({
+          host: process.env.EMAIL_SERVER_HOST!,
+          port: Number(process.env.EMAIL_SERVER_PORT!),
+          auth: {
+            user: process.env.EMAIL_SERVER_USER!,
+            pass: process.env.EMAIL_SERVER_PASSWORD!,
+          },
+        });
+
+        await transporter.sendMail({
+          to: identifier,
+          from: process.env.EMAIL_FROM!,
+          subject,
+          html,
+        });
       },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  session: { strategy: "database" },
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error",
   },
-  callbacks: {
-    async session({ session, token }) {
-      if (session.user && token?.sub) {
-        session.user.id = token.sub;
-        session.user.email = token.email;
-      }
-      return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.sub = user.id;
-        token.email = user.email;
-      }
-      return token;
-    },
-  },
-  events: {
-    createUser: async (message) => {
-      console.log("New user created:", message)
-    },
-  },
-  session: {
-    strategy: "database",
-  },
   debug: true,
 };
-
-export default NextAuth(authOptions);
