@@ -1,4 +1,5 @@
 import React from 'react';
+import SaveButton from './SaveButton';
 
 type ArticleCardProps = {
   article: {
@@ -40,29 +41,34 @@ export default function ArticleCard({ article, searchQuery }: ArticleCardProps) 
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`${sharedClasses}`}
+      className={`${sharedClasses} h-full items-center gap-4`}
     >
       {urlToImage ? (
         <img
           src={urlToImage}
           alt={title}
-          className="w-32 h-20 object-cover rounded flex-shrink-0"
+          className="w-42 h-30 object-cover rounded flex-shrink-0"
           loading="lazy"
         />
       ) : (
         <img
           src="/fallback.jpg"
           alt="No image available"
-          className="w-32 h-20 object-cover rounded flex-shrink-0"
+          className="w-42 h-30 object-cover rounded flex-shrink-0"
         />
       )}
-      <div>
-        <h2 className="text-lg font-semibold">
-          {highlightText(title, searchQuery)}
-        </h2>
-        <p className="text-sm">
-          {highlightText(description, searchQuery)}
-        </p>
+      <div className="flex flex-col justify-center flex-1 overflow-visible">
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold mb-1">
+            {highlightText(title, searchQuery)}
+          </h2>
+          <p className="text-md break-words">
+            {highlightText(description, searchQuery)}
+          </p>
+        </div>
+        <div className="mt-2 self-end">
+          <SaveButton article={article} />
+        </div>
       </div>
     </a>
   );

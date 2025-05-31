@@ -98,17 +98,17 @@ const Home = () => {
         <div className="flex gap-4">
           {session?.user?.name ? (
             <div>
-              <p>Welcome, {session.user.name}!</p>
+              <p>Welcome, {session.user.name ?? session.user.email?.split('@')[0]}!</p>
               <button onClick={() => signOut()} className="button button-red">
                 Logout
               </button>
             </div>
           ) : (
             <>
-              <button onClick={() => router.push('/auth/signin')} className="button button-blue">
+              <button onClick={() => router.push('/auth')} className="button button-blue">
                 Login
               </button>
-              <button onClick={() => router.push('/signup')} className="button button-green">
+              <button onClick={() => router.push('/auth')} className="button button-green">
                 Sign Up
               </button>
             </>
@@ -154,7 +154,6 @@ const Home = () => {
           filteredNews.map((article) => (
             <div key={article.title}>
               <ArticleCard article={article} searchQuery={searchQuery} />
-              <SaveButton article={article} />
             </div>
           ))
         ) : (

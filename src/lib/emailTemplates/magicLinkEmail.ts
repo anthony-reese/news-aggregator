@@ -2,8 +2,8 @@ export function magicLinkTemplate(link: string) {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 2rem; background-color: #f9f9f9; border-radius: 8px;">
       <div style="text-align: center; margin-bottom: 2rem;">
-        <img src="https://placehold.co/120x60" alt="Your App Logo" width="120" />
-        <h2 style="color: #222;">Sign in to News Aggregator</h2>
+        <img src="/images/email.svg" alt="News Briefs" width="120" height="60" />
+        <h2 style="color: #222;">Sign in to News Briefs</h2>
       </div>
       <p style="color: #333; font-size: 16px;">Click the button below to securely log in:</p>
       <div style="text-align: center; margin: 2rem 0;">
@@ -15,7 +15,7 @@ export function magicLinkTemplate(link: string) {
     </div>
   `;
 
-  const subject = "Your Magic Login Link for News Aggregator";
+  const subject = "Your Magic Login Link for News Briefs";
 
   return { subject, html };
 }

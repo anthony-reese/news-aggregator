@@ -1,37 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# News Briefs
 
-## Getting Started
+A modern news aggregator web app built with **Next.js 15**, **Tailwind CSS**, and **NextAuth.js** for authentication. The app fetches top headlines from the [NewsAPI](https://newsapi.org) and allows users to sign in using email magic links.
 
-First, run the development server:
+## Features
+
+- Email-based login via magic link (NextAuth)
+- Browse top headlines by category (e.g., business, tech, sports)
+- Save favorite articles (requires login)
+- Fully responsive layout with dark mode
+- Powered by Prisma + Postgres for persistence
+- Deployed on [Vercel](https://vercel.com)
+
+## Demo
+
+Live site: [https://news-briefs.vercel.app/](https://news-briefs.vercel.app/)
+
+## Screenshots
+
+![Home](./public/screenshots/home.png)
+![Sign In](./public/screenshots/signin.png)
+
+## Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS
+- **Backend:** API Routes, NextAuth, Prisma ORM
+- **Email:** Nodemailer + Mailtrap (for dev)
+- **Database:** PostgreSQL
+- **Deployment:** Vercel
+
+## Setup Instructions
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/anthony-reese/news-aggregator.git
+cd news-briefs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Configure environment variables
+Create a .env.local file based on .env.example:
+```
+DATABASE_URL="file:./dev.db"
+NEWS_API_KEY="your_news_api_key"
+EMAIL_SERVER_HOST="smtp.mailtrap.io"
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER="your_mailtrap_user"
+EMAIL_SERVER_PASSWORD="your_mailtrap_pass"
+EMAIL_FROM="news@app.com"
+NEXTAUTH_SECRET="a_secure_random_string"
+```
 
-## Learn More
+### 4. Run development server
+```
+npx prisma generate
+npx prisma migrate dev --name init
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Build for production
+```
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contact
+- For questions or feedback: [@anthony-reese](https://github.com/anthony-reese)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
+- [MIT](https://mit-license.org) © 2025
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# news-aggregator
