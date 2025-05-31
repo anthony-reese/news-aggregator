@@ -79,5 +79,5 @@ export const authOptions: AuthOptions = {
       console.log(`✅ Assigned default name "${defaultName}" to new user`);
     },
   },
-  debug: true,
+  debug: false,
 };
