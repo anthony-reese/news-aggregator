@@ -32,8 +32,8 @@ export const authOptions: AuthOptions = {
         await transporter.sendMail({
           to: identifier,
           from: process.env.EMAIL_FROM!,
-          subject: subject,
-          html: html,
+          subject,
+          html,
         });
 
         console.log(`✅ Email sent to ${identifier}`);
