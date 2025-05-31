@@ -33,8 +33,8 @@
       "@/lib/prisma": [
         "lib/prisma"
       ],
-      "@/app/lib/api": [
-        "app/lib/api"
+      "@/lib/^": [
+        "app/lib/*"
       ],
       "@/api/auth/[...nextauth]": [
         "api/auth/[...nextauth]"
