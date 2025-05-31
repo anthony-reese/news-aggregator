@@ -19,25 +19,31 @@ export const authOptions: AuthOptions = {
       },
       from: process.env.EMAIL_FROM!,
       async sendVerificationRequest({ identifier, url }) {
-        const { html, subject } = magicLinkTemplate(url);
-        const transporter = nodemailer.createTransport({
-          host: process.env.EMAIL_SERVER_HOST!,
-          port: Number(process.env.EMAIL_SERVER_PORT!),
-          auth: {
-            user: process.env.EMAIL_SERVER_USER!,
-            pass: process.env.EMAIL_SERVER_PASSWORD!,
-          },
-        });
+        try {
+          const { html, subject } = magicLinkTemplate(url);
 
-        await transporter.sendMail({
-          to: identifier,
-          from: process.env.EMAIL_FROM!,
-          subject,
-          html,
-        });
+          const transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_SERVER_HOST!,
+            port: Number(process.env.EMAIL_SERVER_PORT!),
+            auth: {
+              user: process.env.EMAIL_SERVER_USER!,
+              pass: process.env.EMAIL_SERVER_PASSWORD!,
+            },
+          });
 
-        console.log(`✅ Email sent to ${identifier}`);
-      },
+          const result = await transporter.sendMail({
+            to: identifier,
+            from: process.env.EMAIL_FROM!,
+            subject,
+            html,
+          });
+
+          console.log("✅ Email sent", result);
+        } catch (err) {
+          console.error("❌ Error sending email:", err);
+          throw new Error("Failed to send verification email.");
+        }
+      }
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
