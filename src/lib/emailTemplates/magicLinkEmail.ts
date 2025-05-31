@@ -2,7 +2,7 @@ export function magicLinkTemplate(link: string) {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 2rem; background-color: #f9f9f9; border-radius: 8px;">
       <div style="text-align: center; margin-bottom: 2rem;">
-        <img src="/images/email.svg" alt="News Briefs" width="120" height="60" />
+        <img src="https://news-briefs.vercel.app/images/email.svg" alt="News Briefs" width="120" height="60" />
         <h2 style="color: #222;">Sign in to News Briefs</h2>
       </div>
       <p style="color: #333; font-size: 16px;">Click the button below to securely log in:</p>
