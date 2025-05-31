@@ -11,7 +11,7 @@ export function magicLinkTemplate(link: string) {
           🔐 Log in
         </a>
       </div>
-      <p style="font-size: 14px; color: #666;">This link will expire in 10 minutes. If you didn’t request it, you can ignore this email.</p>
+      <p style="font-size: 14px; color: #666;">This link will expire in 10 minutes. If you didn’t request the link, you can ignore this email.</p>
     </div>
   `;
 
@@ -19,4 +19,3 @@ export function magicLinkTemplate(link: string) {
 
   return { subject, html };
 }
-
